@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Ivy Cheruto | 08 Months</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;600&family=Playfair+Display:ital,wght@0,600;1,600&display=swap');
+
+        body {
+            background: linear-gradient(135deg, #fff5f5 0%, #fff0f7 100%);
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            color: #4a1d1d;
+            user-select: none;
+            touch-action: none;
+        }
+
+        .serif { font-family: 'Playfair Display', serif; }
+
+        /* Animated Colorful Blobs */
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            z-index: 0;
+            opacity: 0.3;
+            animation: move 20s infinite alternate;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(20%, 20%); }
+        }
+
+        #no-button {
+            position: fixed;
+            z-index: 50;
+            will-change: transform;
+            touch-action: none;
+            background: #fff;
+            border: 2px solid #ff85a2;
+            color: #ff4d6d;
+            box-shadow: 0 4px 15px rgba(255, 77, 109, 0.2);
+            white-space: nowrap;
+        }
+
+        .yes-inactive {
+            opacity: 0.3;
+            cursor: not-allowed;
+            filter: saturate(0);
+            pointer-events: none;
+        }
+
+        .yes-active {
+            opacity: 1;
+            cursor: pointer;
+            filter: saturate(1.5);
+            pointer-events: auto;
+            background: linear-gradient(45deg, #ff4d6d, #ff85a2);
+            animation: pulse-colorful 2s infinite;
+        }
+
+        @keyframes pulse-colorful {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 77, 109, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 77, 109, 0); }
+        }
+
+        .modal-overlay {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+
+        .rose-animation {
+            animation: grow 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+
+        @keyframes grow {
+            0% { transform: scale(0) rotate(-45deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .hidden { display: none !important; }
+        .flex-center { display: flex; align-items: center; justify-content: center; }
+
+        .gradient-text {
+            background: linear-gradient(45deg, #ff4d6d, #7e57c2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            animation: fall 3s linear forwards;
+            z-index: 250;
+        }
+
+        @keyframes fall {
+            to { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        /* Small screen adjustments */
+        @media (max-width: 400px) {
+            .hero-text { font-size: 2.75rem; }
+            .btn-padding { padding-left: 1.25rem; padding-right: 1.25rem; }
+        }
+    </style>
+</head>
+<body class="flex-center">
+
+    <!-- Background Decoration -->
+    <div class="blob w-64 h-64 md:w-96 md:h-96 bg-pink-200 -top-10 -left-10"></div>
+    <div class="blob w-64 h-64 md:w-80 md:h-80 bg-purple-200 bottom-0 right-0" style="animation-delay: -5s;"></div>
+
+    <!-- Intro / Game View -->
+    <div id="view-intro" class="relative z-10 text-center p-4 max-w-md w-full">
+        <span class="text-[10px] tracking-[0.4em] uppercase text-pink-500 font-bold block mb-4 md:mb-6">A Colorful Adventure</span>
+        <h1 class="serif text-4xl sm:text-5xl md:text-6xl italic mb-4 leading-tight gradient-text hero-text">Ivy Cheruto,</h1>
+        <p class="text-stone-500 font-light mb-8 md:mb-12 text-sm sm:text-base px-2">
+            8 months of brightness. 1 final decision.<br>
+            <span id="instruction" class="italic text-purple-400 font-medium">(Try to catch the 'No' if you can!)</span>
+        </p>
+
+        <div class="flex flex-col items-center justify-center min-h-[200px] sm:min-h-[250px] relative w-full">
+            <!-- YES BUTTON (Locked) -->
+            <button id="yes-button" class="yes-inactive text-white px-10 sm:px-20 py-4 sm:py-5 rounded-full text-[11px] sm:text-[12px] tracking-[0.3em] sm:tracking-[0.4em] uppercase font-bold shadow-2xl transition-all duration-300 btn-padding">
+                Yes, I will
+            </button>
+
+            <!-- NO BUTTON (Bouncy) -->
+            <button id="no-button" class="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full text-[10px] tracking-widest uppercase font-bold">
+                No
+            </button>
+        </div>
+
+        <div id="timer-container" class="mt-6 md:mt-8 opacity-0 transition-opacity duration-500">
+            <p class="text-[9px] sm:text-[10px] uppercase tracking-widest text-pink-400 font-semibold mb-1">Catch Me Timer</p>
+            <div id="timer-display" class="text-2xl sm:text-3xl font-bold text-purple-500 tabular-nums">00:20</div>
+        </div>
+    </div>
+
+    <!-- Intervention Modals -->
+    <div id="modal-overlay" class="hidden fixed inset-0 z-[100] modal-overlay flex-center p-6 text-center">
+        <div id="modal-step-1" class="max-w-xs w-full">
+            <p class="serif text-2xl sm:text-3xl italic mb-6 text-pink-600">Wait a second!</p>
+            <p class="text-stone-600 font-medium mb-8 sm:mb-10 text-xs sm:text-sm leading-relaxed">
+                Even the button doesn't agree with you...<br><br>
+                I'm not being greedy, I just want you to really touch the correct button 🤭
+            </p>
+            <button onclick="showStep2()" class="bg-purple-600 text-white px-8 py-3 rounded-full text-[10px] tracking-[0.2em] uppercase font-bold shadow-lg shadow-purple-200">
+                Give me another chance
+            </button>
+        </div>
+
+        <div id="modal-step-2" class="hidden max-w-xs w-full flex flex-col items-center">
+            <div class="mb-6 sm:mb-8 rose-animation">
+                <svg width="80" height="80" class="sm:w-[100px] sm:h-[100px]" viewBox="0 0 24 24" fill="none" stroke="#ff4d6d" stroke-width="1.5">
+                    <path d="M12 22V14M12 14C12 14 10 12 7 12C4 12 2 14 2 17C2 20 5 21 7 21C9 21 12 19 12 19M12 14C12 14 14 12 17 12C20 12 22 14 22 17C22 20 19 21 17 21C15 21 12 19 12 19" />
+                    <circle cx="12" cy="7" r="5" fill="#ff4d6d" fill-opacity="0.9"/>
+                </svg>
+            </div>
+            <p class="serif text-2xl sm:text-3xl italic mb-6 text-pink-600">For you...</p>
+            <p class="text-stone-600 font-medium mb-8 sm:mb-10 text-xs sm:text-sm italic">Take this digital rose first. Do you still think you'd want to say no?</p>
+            <button onclick="unlockYes()" class="bg-gradient-to-r from-pink-500 to-red-500 text-white px-10 py-4 rounded-full text-[10px] tracking-[0.3em] uppercase font-bold shadow-xl">
+                I've changed my mind!
+            </button>
+        </div>
+    </div>
+
+    <!-- Success View -->
+    <div id="view-success" class="hidden fixed inset-0 z-[200] bg-gradient-to-br from-pink-50 to-white flex flex-col items-center justify-center p-6 text-center overflow-y-auto">
+        <div class="max-w-sm w-full py-6">
+            <div class="text-4xl sm:text-5xl mb-4 sm:mb-6">🎉❤️✨</div>
+            <h1 class="serif text-4xl sm:text-5xl italic mb-2 sm:mb-4 gradient-text">Finally!</h1>
+            <p class="text-pink-400 font-bold tracking-[0.1em] sm:tracking-[0.2em] uppercase text-[9px] sm:text-[10px] mb-6 sm:mb-10">You made my heart skip a stitch!</p>
+            
+            <div class="relative mb-8 sm:mb-10 px-4">
+                <div class="absolute -inset-4 bg-gradient-to-r from-pink-300 to-purple-300 rounded-[3rem] blur-2xl opacity-40 animate-pulse"></div>
+                <div class="relative bg-white p-2 rounded-2xl sm:rounded-3xl shadow-2xl aspect-[4/5] max-h-[40vh] sm:max-h-none mx-auto">
+                    <img src="IMG_20260125_203631_385-ANIMATION.gif" 
+                         class="w-full h-full object-cover rounded-xl sm:rounded-2xl transition-all duration-1000">
+                </div>
+            </div>
+            
+            <p class="serif text-xl sm:text-2xl italic text-red-600 mb-2 font-bold">"I'd let the world burn for you."</p>
+            <p class="text-[10px] sm:text-[11px] tracking-[0.3em] sm:tracking-[0.5em] uppercase text-stone-400 mt-6 sm:mt-8 font-bold italic">8 Months & Forever to go</p>
+        </div>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('no-button');
+        const yesBtn = document.getElementById('yes-button');
+        const timerContainer = document.getElementById('timer-container');
+        const timerDisplay = document.getElementById('timer-display');
+        const overlay = document.getElementById('modal-overlay');
+        const step1 = document.getElementById('modal-step-1');
+        const step2 = document.getElementById('modal-step-2');
+        const successView = document.getElementById('view-success');
+
+        let posX = window.innerWidth / 2 - 40;
+        let posY = window.innerHeight * 0.7;
+        let velX = 0;
+        let velY = 0;
+        let countdown = 20;
+        let timerStarted = false;
+        let isActive = true;
+
+        // Initialize position
+        noBtn.style.left = posX + 'px';
+        noBtn.style.top = posY + 'px';
+
+        function updatePhysics() {
+            if (!isActive) return;
+
+            posX += velX;
+            posY += velY;
+            velX *= 0.985;
+            velY *= 0.985;
+
+            const btnWidth = noBtn.offsetWidth;
+            const btnHeight = noBtn.offsetHeight;
+
+            // Strict responsive boundary checks
+            if (posX <= 5) {
+                velX = Math.abs(velX) * 0.9;
+                posX = 6;
+            } else if (posX >= window.innerWidth - btnWidth - 5) {
+                velX = -Math.abs(velX) * 0.9;
+                posX = window.innerWidth - btnWidth - 6;
+            }
+
+            if (posY <= 5) {
+                velY = Math.abs(velY) * 0.9;
+                posY = 6;
+            } else if (posY >= window.innerHeight - btnHeight - 5) {
+                velY = -Math.abs(velY) * 0.9;
+                posY = window.innerHeight - btnHeight - 6;
+            }
+
+            noBtn.style.left = posX + 'px';
+            noBtn.style.top = posY + 'px';
+
+            requestAnimationFrame(updatePhysics);
+        }
+
+        function handleInteraction(e) {
+            if (!isActive) return;
+            if (e && e.type === 'touchstart') e.preventDefault();
+
+            if (!timerStarted) {
+                timerStarted = true;
+                timerContainer.style.opacity = '1';
+                const interval = setInterval(() => {
+                    countdown--;
+                    timerDisplay.innerText = `00:${countdown < 10 ? '0' : ''}${countdown}`;
+                    if (countdown <= 0) {
+                        clearInterval(interval);
+                        triggerIntervention();
+                    }
+                }, 1000);
+            }
+
+            const angle = Math.random() * Math.PI * 2;
+            const speed = window.innerWidth < 600 ? 12 + Math.random() * 8 : 18 + Math.random() * 12;
+            velX = Math.cos(angle) * speed;
+            velY = Math.sin(angle) * speed;
+        }
+
+        function triggerIntervention() {
+            isActive = false;
+            noBtn.classList.add('hidden');
+            overlay.classList.remove('hidden');
+        }
+
+        function showStep2() {
+            step1.classList.add('hidden');
+            step2.classList.remove('hidden');
+        }
+
+        function unlockYes() {
+            overlay.classList.add('hidden');
+            yesBtn.classList.remove('yes-inactive');
+            yesBtn.classList.add('yes-active');
+            document.getElementById('instruction').innerHTML = "<b class='text-pink-600'>Correct button unlocked! ❤️</b>";
+            timerContainer.style.opacity = '0';
+        }
+
+        function createConfetti() {
+            for(let i=0; i<40; i++) {
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                c.style.left = Math.random() * 100 + 'vw';
+                c.style.top = '-10px';
+                c.style.background = `hsl(${Math.random()*360}, 100%, 70%)`;
+                c.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+                c.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                c.style.animationDelay = (Math.random() * 1) + 's';
+                document.body.appendChild(c);
+            }
+        }
+
+        noBtn.addEventListener('mouseover', handleInteraction);
+        noBtn.addEventListener('touchstart', handleInteraction, {passive: false});
+
+        yesBtn.addEventListener('click', () => {
+            if (yesBtn.classList.contains('yes-active')) {
+                successView.classList.remove('hidden');
+                createConfetti();
+            }
+        });
+
+        window.addEventListener('resize', () => {
+            posX = Math.min(posX, window.innerWidth - noBtn.offsetWidth - 10);
+            posY = Math.min(posY, window.innerHeight - noBtn.offsetHeight - 10);
+        });
+
+        updatePhysics();
+    </script>
+</body>
+</html>
