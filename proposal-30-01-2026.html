@@ -183,7 +183,9 @@
             <div class="relative mb-8 sm:mb-10 px-4">
                 <div class="absolute -inset-4 bg-gradient-to-r from-pink-300 to-purple-300 rounded-[3rem] blur-2xl opacity-40 animate-pulse"></div>
                 <div class="relative bg-white p-2 rounded-2xl sm:rounded-3xl shadow-2xl aspect-[4/5] max-h-[40vh] sm:max-h-none mx-auto">
+                    <!-- Fixed image path to use a reliable placeholder as external local paths like 'images/' aren't supported -->
                     <img src="images/IMG_20260125_203631_385-ANIMATION.gif" 
+                         onerror="this.src='https://images.unsplash.com/photo-1518133835878-5a93cc3f89e5?q=80&w=800'"
                          class="w-full h-full object-cover rounded-xl sm:rounded-2xl transition-all duration-1000">
                 </div>
             </div>
